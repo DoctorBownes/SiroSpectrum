@@ -3,7 +3,7 @@
 
 struct GLFWwindow* _window;
 
-void SetupCore();
+void SetupWindow();
 
 void RunGame(struct Game* game);
 

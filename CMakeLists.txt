@@ -44,7 +44,6 @@ add_subdirectory (external)
 include_directories( # g++ -Ipath/to/headerfiles
 	external/glfw-3.3.8/include/
 	external/glad-3.3/include/
-	external/glm-0.9.9.8/
 	.
 )
 
@@ -59,10 +58,12 @@ set(ALL_GRAPHICS_LIBS
 # SiroSpectrum (libSiroSpectrum.a)
 add_library(SiroSpectrum # ar rcs libSiroSpectrum.a
 	external/glad-3.3/src/glad.c
-	SiroSpectrum/core.h
 	SiroSpectrum/core.c
-	SiroSpectrum/game.h
+	SiroSpectrum/core.h
 	SiroSpectrum/game.c
+	SiroSpectrum/game.h
+	SiroSpectrum/renderer.c
+	SiroSpectrum/renderer.h
 )
 
 # Test
