@@ -7,13 +7,12 @@
 
 const char* vertex_shader =
 "#version 330 core\n"
-"layout(location = 0) in vec2 vertexPosition;\n"
-"layout(location = 1) in vec2 uvPosition;\n"
+"layout(location = 0) in vec4 vertexPosition;\n"
 "out vec2 UV;\n"
 "void main()\n"
 "{\n"
 "	gl_Position = vec4(vertexPosition.x ,vertexPosition.y,0.0f, 1.0f);\n"
-"	UV = uvPosition;\n"
+"	UV = vec2(vertexPosition.z ,vertexPosition.w);\n"
 "};\0";
 
 const char* fragment_shader =
@@ -82,21 +81,20 @@ void SetupRenderer(void) {
     glBindVertexArray(Init);
     
     static const GLfloat GS_vertex_buffer_data[] = {
-       -0.5f,  0.5f,    -0.5f, -0.5f,
-        0.5f,  0.5f,    0.5f, -0.5f,
-
-        0.5f, -0.5f,    0.5f, 0.5f,
-       -0.5f, -0.5f,    -0.5f, 0.5f,
+         0.5f,  0.5f,   0.0f, 0.0f,
+         0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, 1.0f, 1.0f,
+        -0.5f,  0.5f,  1.0f, 0.0f,
+    };
+    unsigned int indices[] = {
+        0, 1, 3,
+        1, 2, 3
     };
 
     glGenBuffers(1, &renderer.GSvertexbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, renderer.GSvertexbuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GS_vertex_buffer_data), GS_vertex_buffer_data, GL_STATIC_DRAW);
 
-    unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 2,   // first triangle
-        2, 3, 0    // second triangle
-    };
 
     glGenBuffers(1, &renderer.EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer.EBO);
@@ -105,10 +103,10 @@ void SetupRenderer(void) {
     unsigned char texture[] = {
         RED,WHT,WHT,WHT,WHT,WHT,WHT,RED,
         WHT,WHT,WHT,WHT,WHT,WHT,WHT,WHT,
+        WHT,WHT,RED,WHT,WHT,RED,WHT,WHT,
         WHT,WHT,WHT,WHT,WHT,WHT,WHT,WHT,
-        WHT,WHT,WHT,WHT,WHT,WHT,WHT,WHT,
-        WHT,WHT,WHT,WHT,WHT,WHT,WHT,WHT,
-        WHT,WHT,WHT,WHT,WHT,WHT,WHT,WHT,
+        WHT,RED,WHT,WHT,WHT,WHT,RED,WHT,
+        WHT,WHT,RED,RED,RED,RED,WHT,WHT,
         WHT,WHT,WHT,WHT,WHT,WHT,WHT,WHT,
         RED,WHT,WHT,WHT,WHT,WHT,WHT,RED,
     };
@@ -130,25 +128,17 @@ void RenderGameScreen(void){
     glBindTexture(GL_TEXTURE_2D, renderer.GStexturebuffer);
     glUniform1i(glGetUniformLocation(renderer.shaderProgram, "BGTextureSampler"), 0);
 
-    glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, renderer.GSvertexbuffer);
     glVertexAttribPointer(
         0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-        2,                  // size
+        4,                  // size
         GL_FLOAT,           // type
         GL_FALSE,           // normalized?
-        4,                  // stride
-        (void*)4            // array buffer offset
+        0,                   // stride
+        (void*)0            // array buffer offset
     );
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(
-        1,
-        2, 
-        GL_FLOAT,
-        GL_FALSE,
-        4,
-        (void*)4);
-    // Draw the triangle !
+    glEnableVertexAttribArray(0);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer.EBO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glDisableVertexAttribArray(0);
