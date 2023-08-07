@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #define WHT 255,255,255
+#define BLK 0,0,0
 #define RED 255,0,0
 
 const char* vertex_shader =
@@ -81,14 +82,14 @@ void SetupRenderer(void) {
     glBindVertexArray(Init);
     
     static const GLfloat GS_vertex_buffer_data[] = {
-         0.5f,  0.5f,   0.0f, 0.0f,
-         0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, 1.0f, 1.0f,
-        -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f,  0.0f, 1.0f,
     };
     unsigned int indices[] = {
-        0, 1, 3,
-        1, 2, 3
+        0, 1, 2,
+        2, 3, 0
     };
 
     glGenBuffers(1, &renderer.GSvertexbuffer);
@@ -101,14 +102,24 @@ void SetupRenderer(void) {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     unsigned char texture[] = {
-        RED,WHT,WHT,WHT,WHT,WHT,WHT,RED,
-        WHT,WHT,WHT,WHT,WHT,WHT,WHT,WHT,
-        WHT,WHT,RED,WHT,WHT,RED,WHT,WHT,
-        WHT,WHT,WHT,WHT,WHT,WHT,WHT,WHT,
-        WHT,RED,WHT,WHT,WHT,WHT,RED,WHT,
-        WHT,WHT,RED,RED,RED,RED,WHT,WHT,
-        WHT,WHT,WHT,WHT,WHT,WHT,WHT,WHT,
-        RED,WHT,WHT,WHT,WHT,WHT,WHT,RED,
+        BLK,BLK,BLK,BLK,BLK,BLK,BLK,BLK,
+        BLK,BLK,BLK,BLK,BLK,BLK,BLK,BLK,
+        WHT,BLK,BLK,BLK,WHT,BLK,BLK,WHT,
+        WHT,BLK,BLK,BLK,WHT,WHT,WHT,WHT,
+        BLK,WHT,BLK,BLK,WHT,BLK,WHT,BLK,
+        BLK,WHT,WHT,WHT,WHT,WHT,WHT,WHT,
+        BLK,BLK,WHT,WHT,WHT,WHT,WHT,BLK,
+        BLK,BLK,WHT,BLK,WHT,BLK,WHT,BLK,
+    };
+    unsigned char bittexture[] = {
+        0b00000000,
+        0b00000000,
+        0b10001001,
+        0b10001111,
+        0b01001010,
+        0b01111111,
+        0b00111110,
+        0b00101010,
     };
 
 
