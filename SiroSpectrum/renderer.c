@@ -2,9 +2,14 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#define WHT 255,255,255
-#define BLK 0,0,0
-#define RED 255,0,0
+#define BLK 0,0,0,0
+#define BLU 0,0,255,255
+#define RED 255,0,0,255
+#define MGT 255,0,255,255
+#define GRN 0,255,0,255
+#define CYN 0,255,255,255
+#define YLW 255,255,0,255
+#define WHT 255,255,255,255
 
 const char* vertex_shader =
 "#version 330 core\n"
@@ -21,9 +26,15 @@ const char* fragment_shader =
 "in vec2 UV;\n"
 "out vec4 FragColor;\n"
 "uniform sampler2D BGTextureSampler;\n"
+"uniform sampler2D FGTextureSampler;\n"
+"uniform sampler1D PaletteSampler;\n"
 "void main()\n"
 "{\n"
-"	FragColor = texture2D(BGTextureSampler, UV);\n"
+"   float index1 = texture(BGTextureSampler, UV).r;\n"
+"   float index2 = texture(FGTextureSampler, UV).r;\n"
+"   vec4 texel1 = texelFetch(PaletteSampler, int(index1 * 255), 0);\n"
+"   vec4 texel2 = texelFetch(PaletteSampler, int(index2 * 255), 0);\n"
+"	FragColor = texel1 + texel2 - texel1 * texel2.a ;\n"
 "};\0";
 
 void SetupRenderer(void) {
@@ -82,18 +93,18 @@ void SetupRenderer(void) {
     glBindVertexArray(Init);
     
     static const GLfloat GS_vertex_buffer_data[] = {
-        -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f,  0.0f, 1.0f,
+        -1.0f,  1.0f,  0.0f, 0.0f,
+         1.0f,  1.0f,  1.0f, 0.0f,
+         1.0f, -1.0f,  1.0f, 1.0f,
+        -1.0f, -1.0f,  0.0f, 1.0f,
     };
     unsigned int indices[] = {
         0, 1, 2,
         2, 3, 0
     };
 
-    glGenBuffers(1, &renderer.GSvertexbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, renderer.GSvertexbuffer);
+    glGenBuffers(1, &renderer.vertexbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, renderer.vertexbuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GS_vertex_buffer_data), GS_vertex_buffer_data, GL_STATIC_DRAW);
 
 
@@ -101,45 +112,83 @@ void SetupRenderer(void) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer.EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    unsigned char texture[] = {
-        BLK,BLK,BLK,BLK,BLK,BLK,BLK,BLK,
-        BLK,BLK,BLK,BLK,BLK,BLK,BLK,BLK,
-        WHT,BLK,BLK,BLK,WHT,BLK,BLK,WHT,
-        WHT,BLK,BLK,BLK,WHT,WHT,WHT,WHT,
-        BLK,WHT,BLK,BLK,WHT,BLK,WHT,BLK,
-        BLK,WHT,WHT,WHT,WHT,WHT,WHT,WHT,
-        BLK,BLK,WHT,WHT,WHT,WHT,WHT,BLK,
-        BLK,BLK,WHT,BLK,WHT,BLK,WHT,BLK,
-    };
-    unsigned char bittexture[] = {
-        0b00000000,
-        0b00000000,
-        0b10001001,
-        0b10001111,
-        0b01001010,
-        0b01111111,
-        0b00111110,
-        0b00101010,
+    unsigned char bgtexture[] = {
+        2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
     };
 
+    unsigned char fgtexture[256 * 192];
+    for (int i = 0; i < 256 * 192; i++) {
+        fgtexture[i] = 0;
+    }
 
+    fgtexture[512] = 0;
+    fgtexture[513] = 1;
+    fgtexture[514] = 2;
+    fgtexture[515] = 3;
+    fgtexture[516] = 4;
+    fgtexture[517] = 5;
+    fgtexture[518] = 6;
+    fgtexture[519] = 7;
+    
     glActiveTexture(GL_TEXTURE0);
-    glGenTextures(1, &renderer.GStexturebuffer);
-    glBindTexture(GL_TEXTURE_2D, renderer.GStexturebuffer);
+    glGenTextures(1, &renderer.BGtexturesampler);
+    glBindTexture(GL_TEXTURE_2D, renderer.BGtexturesampler);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 8, 8, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 32, 24, 0, GL_RED, GL_UNSIGNED_BYTE, bgtexture);
     glUniform1i(glGetUniformLocation(renderer.shaderProgram, "BGTextureSampler"), 0);
 
+    glActiveTexture(GL_TEXTURE1);
+    glGenTextures(1, &renderer.FGtexturesampler);
+    glBindTexture(GL_TEXTURE_2D, renderer.FGtexturesampler);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 256, 192, 0, GL_RED, GL_UNSIGNED_BYTE, fgtexture);
+    glUniform1i(glGetUniformLocation(renderer.shaderProgram, "FGTextureSampler"), 1);
+
+    unsigned char palette[] = {
+        BLK,BLU,RED,MGT,GRN,CYN,YLW,WHT
+    };
+
+    glActiveTexture(GL_TEXTURE2);
+    glGenTextures(1, &renderer.PaletteSampler);
+    glBindTexture(GL_TEXTURE_1D, renderer.PaletteSampler);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, palette);
+    glUniform1i(glGetUniformLocation(renderer.shaderProgram, "PaletteSampler"), 2);
+
+    glActiveTexture(GL_TEXTURE0);
 }
 
 void RenderGameScreen(void){
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, renderer.GStexturebuffer);
-    glUniform1i(glGetUniformLocation(renderer.shaderProgram, "BGTextureSampler"), 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, renderer.GSvertexbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, renderer.vertexbuffer);
     glVertexAttribPointer(
         0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
         4,                  // size
@@ -153,5 +202,4 @@ void RenderGameScreen(void){
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer.EBO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
 }
