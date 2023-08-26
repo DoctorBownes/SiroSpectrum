@@ -1,8 +1,11 @@
 #ifndef RENDERER_H_
 #define RENDERER_H_
 
-typedef unsigned int GLuint;
+#define WIN_WIDTH 256
+#define WIN_HEIGHT 192
+#define TILESIZE 8
 
+typedef unsigned int GLuint;
 
 typedef struct Renderer Renderer;
 struct Renderer {
@@ -14,9 +17,16 @@ struct Renderer {
 	GLuint EBO;
 };
 
+unsigned char backgroundcolors[(WIN_WIDTH / TILESIZE) * (WIN_HEIGHT / TILESIZE)];
+unsigned char pixelbuffer[WIN_WIDTH * WIN_HEIGHT];
+
 Renderer renderer;
 
 void SetupRenderer(void);
+
+void ResetGameScreen(void);
+
+void DrawGameScreen(void);
 
 void RenderGameScreen(void);
 

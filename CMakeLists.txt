@@ -64,6 +64,7 @@ add_library(SiroSpectrum # ar rcs libSiroSpectrum.a
 	SiroSpectrum/game.h
 	SiroSpectrum/renderer.c
 	SiroSpectrum/renderer.h
+	SiroSpectrum/sprite.h
 )
 
 # Test

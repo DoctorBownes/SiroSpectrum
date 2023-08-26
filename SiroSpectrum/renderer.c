@@ -112,53 +112,20 @@ void SetupRenderer(void) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer.EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    unsigned char bgtexture[] = {
-        2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-        6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
-    };
-
-    unsigned char fgtexture[256 * 192];
-    for (int i = 0; i < 256 * 192; i++) {
-        fgtexture[i] = 0;
+    for (unsigned short s = 0; s < WIN_HEIGHT * WIN_WIDTH / (TILESIZE * TILESIZE); s++) {
+        backgroundcolors[s] = 0;
     }
 
-    fgtexture[512] = 0;
-    fgtexture[513] = 1;
-    fgtexture[514] = 2;
-    fgtexture[515] = 3;
-    fgtexture[516] = 4;
-    fgtexture[517] = 5;
-    fgtexture[518] = 6;
-    fgtexture[519] = 7;
-    
+    for (int i = 0; i < WIN_HEIGHT * WIN_WIDTH; i++) {
+        pixelbuffer[i] = 0;
+    }
+
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &renderer.BGtexturesampler);
     glBindTexture(GL_TEXTURE_2D, renderer.BGtexturesampler);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 32, 24, 0, GL_RED, GL_UNSIGNED_BYTE, bgtexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, WIN_WIDTH / TILESIZE, WIN_HEIGHT / TILESIZE, 0, GL_RED, GL_UNSIGNED_BYTE, backgroundcolors);
     glUniform1i(glGetUniformLocation(renderer.shaderProgram, "BGTextureSampler"), 0);
 
     glActiveTexture(GL_TEXTURE1);
@@ -166,7 +133,7 @@ void SetupRenderer(void) {
     glBindTexture(GL_TEXTURE_2D, renderer.FGtexturesampler);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 256, 192, 0, GL_RED, GL_UNSIGNED_BYTE, fgtexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, WIN_WIDTH, WIN_HEIGHT, 0, GL_RED, GL_UNSIGNED_BYTE, pixelbuffer);
     glUniform1i(glGetUniformLocation(renderer.shaderProgram, "FGTextureSampler"), 1);
 
     unsigned char palette[] = {
@@ -184,6 +151,26 @@ void SetupRenderer(void) {
     glUniform1i(glGetUniformLocation(renderer.shaderProgram, "PaletteSampler"), 2);
 
     glActiveTexture(GL_TEXTURE0);
+}
+
+void ResetGameScreen(void) {
+    for (unsigned short s = 0; s < WIN_HEIGHT * WIN_WIDTH / (TILESIZE * TILESIZE); s++) {
+        backgroundcolors[s] = 0;
+    }
+
+    for (int i = 0; i < WIN_HEIGHT * WIN_WIDTH; i++) {
+        pixelbuffer[i] = 0;
+    }
+}
+
+void DrawGameScreen(void) {
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, renderer.BGtexturesampler);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIN_WIDTH / TILESIZE, WIN_HEIGHT / TILESIZE, GL_RED, GL_UNSIGNED_BYTE, backgroundcolors);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, renderer.FGtexturesampler);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIN_WIDTH, WIN_HEIGHT, GL_RED, GL_UNSIGNED_BYTE, pixelbuffer);
 }
 
 void RenderGameScreen(void){
