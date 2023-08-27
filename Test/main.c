@@ -7,7 +7,9 @@ void updatePlayer() {
 }
 
 void loopdiloop() {
-	printf("loop\n");
+	if (GetKey(Right)) {
+		printf("loop\n");
+	}
 }
 void constring() {
 	printf("constructing\n");
@@ -31,8 +33,8 @@ void constring() {
 	};
 
 	Sprite Stefan = { stefanvas, 0, 0, 8,16};
-	Stefan.x = 7;
-	Stefan.y = 7;
+	Stefan.x = 8;
+	Stefan.y = 8;
 	SetSprite(Stefan, 4);
 
 	SetPixel(65, 128, 2);

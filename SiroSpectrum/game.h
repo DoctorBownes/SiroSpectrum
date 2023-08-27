@@ -2,6 +2,7 @@
 #define GAME_H_
 
 #include <SiroSpectrum/sprite.h>
+#include <SiroSpectrum/input.h>
 
 typedef struct Game Game;
 struct Game {
