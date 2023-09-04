@@ -10,15 +10,20 @@ Game* newGame(void(*gamecontructor)(), void(*gameloop)()) {
 	return game;
 }
 
-void SetSprite(Sprite sprite, unsigned char colour) {
-
-	for (int i = 0; i < sprite.width * sprite.height; i++) {
-		SetPixel(i % sprite.width + sprite.x,
-				 i / sprite.width + sprite.y,
-					(sprite.canvas[i] & 1) * colour);
+void SetSprite(Sprite sprite, unsigned char xpos, unsigned char ypos, unsigned char colour) {
+	unsigned char row = 0;
+	for (unsigned char y = 0; y < sprite.height; y++) {
+		for (unsigned char x = 0; x < sprite.width; x++) {
+			SetPixel(x + xpos, y + ypos, sprite.canvas[row] * colour);
+			row++;
+		}
 	}
 }
 
-void SetPixel(unsigned char x, unsigned char y, unsigned char colour) {
-	pixelbuffer[x + y * WIN_WIDTH] = colour;
+void SetPixel(unsigned char xpos, unsigned char ypos, unsigned char colour) {
+	pixelbuffer[ypos][xpos] = colour;
+}
+
+void SetBGColour(unsigned char xpos, unsigned char ypos, unsigned char colour) {
+	backgroundcolors[ypos][xpos] = colour;
 }

@@ -17,14 +17,12 @@ struct Renderer {
 	GLuint EBO;
 };
 
-unsigned char backgroundcolors[(WIN_WIDTH / TILESIZE) * (WIN_HEIGHT / TILESIZE)];
-unsigned char pixelbuffer[WIN_WIDTH * WIN_HEIGHT];
+unsigned char backgroundcolors[WIN_HEIGHT / TILESIZE][WIN_WIDTH / TILESIZE];
+unsigned char pixelbuffer[WIN_HEIGHT][WIN_WIDTH];
 
 Renderer renderer;
 
 void SetupRenderer(void);
-
-void ResetGameScreen(void);
 
 void DrawGameScreen(void);
 

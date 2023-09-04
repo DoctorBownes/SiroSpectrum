@@ -12,8 +12,10 @@ struct Game {
 
 Game* newGame(void (*gamecontructor)(),void (*gameloop)());
 
-void SetSprite(Sprite sprite, unsigned char colour);
+void SetSprite(Sprite sprite, unsigned char xpos, unsigned char ypos, unsigned char colour);
 
-void SetPixel(unsigned char x, unsigned char y, unsigned char colour);
+void SetPixel(unsigned char xpos, unsigned char ypos, unsigned char colour);
+
+void SetBGColour(unsigned char xpos, unsigned char ypos, unsigned char colour);
 
 #endif

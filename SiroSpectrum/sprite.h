@@ -4,8 +4,6 @@
 typedef struct Sprite Sprite;
 struct Sprite {
 	unsigned char* canvas;
-	unsigned char x;
-	unsigned char y;
 	unsigned char width;
 	unsigned char height;
 };

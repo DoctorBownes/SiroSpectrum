@@ -2,7 +2,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#define BLK 0,0,0,0
+#define OFF 0,0,0,0
+#define BLK 0,0,0,255
 #define BLU 0,0,255,255
 #define RED 255,0,0,255
 #define MGT 255,0,255,255
@@ -112,12 +113,16 @@ void SetupRenderer(void) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer.EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    for (unsigned short s = 0; s < WIN_HEIGHT * WIN_WIDTH / (TILESIZE * TILESIZE); s++) {
-        backgroundcolors[s] = 0;
+    for (unsigned char i = 0; i < WIN_WIDTH / TILESIZE; i++) {
+        for (unsigned char j = 0; j < WIN_HEIGHT / TILESIZE; j++) {
+            backgroundcolors[j][i] = 0;
+        }
     }
 
-    for (int i = 0; i < WIN_HEIGHT * WIN_WIDTH; i++) {
-        pixelbuffer[i] = 0;
+    for (int i = 0; i < WIN_WIDTH; i++) {
+        for (int j = 0; j < WIN_HEIGHT; j++) {
+            pixelbuffer[j][i] = 0;
+        }
     }
 
     glActiveTexture(GL_TEXTURE0);
@@ -137,7 +142,7 @@ void SetupRenderer(void) {
     glUniform1i(glGetUniformLocation(renderer.shaderProgram, "FGTextureSampler"), 1);
 
     unsigned char palette[] = {
-        BLK,BLU,RED,MGT,GRN,CYN,YLW,WHT
+        OFF,BLK,BLU,RED,MGT,GRN,CYN,YLW,WHT
     };
 
     glActiveTexture(GL_TEXTURE2);
@@ -147,20 +152,10 @@ void SetupRenderer(void) {
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, palette);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 9, 0, GL_RGBA, GL_UNSIGNED_BYTE, palette);
     glUniform1i(glGetUniformLocation(renderer.shaderProgram, "PaletteSampler"), 2);
 
     glActiveTexture(GL_TEXTURE0);
-}
-
-void ResetGameScreen(void) {
-    for (unsigned short s = 0; s < WIN_HEIGHT * WIN_WIDTH / (TILESIZE * TILESIZE); s++) {
-        backgroundcolors[s] = 0;
-    }
-
-    for (int i = 0; i < WIN_HEIGHT * WIN_WIDTH; i++) {
-        pixelbuffer[i] = 0;
-    }
 }
 
 void DrawGameScreen(void) {
