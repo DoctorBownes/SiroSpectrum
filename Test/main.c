@@ -64,6 +64,13 @@ void loopdiloop() {
 		plr_y += 2;
 	}
 	SetSprite(Stefan, plr_x, plr_y, dir);
+
+	SetSprite(Stefan, 32, 0, dir);
+	SetSprite(Stefan, 40, 0, 0b00011000);
+	SetSprite(Stefan, 48, 0, 0b00101000);
+	SetSprite(Stefan, 56, 0, 56);
+	SetSprite(Stefan, 64, 0, 0b00010111);
+	SetSprite(Stefan, 72, 0, 0b00110111);
 }
 void constring() {
 	printf("constructing\n");
