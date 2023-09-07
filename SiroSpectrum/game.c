@@ -58,8 +58,18 @@ void SetSprite(Sprite sprite, unsigned char xpos, unsigned char ypos, unsigned c
 	//}
 }
 
+void RemoveSprite(Sprite sprite, unsigned char xpos, unsigned char ypos /*, unsigned char bkgcolour*/) {
+	for (unsigned char y = 0; y < sprite.height; y++) {
+		for (unsigned char x = 0; x < sprite.width; x++) {
+			SetPixel(x + xpos, y + ypos, 0/*bkgcolour*/);
+		}
+	}
+}
+
 void SetPixel(unsigned char xpos, unsigned char ypos, unsigned char colour) {
-	pixelbuffer[ypos][xpos] = colour & 15;
+	//if (colour) {
+		pixelbuffer[ypos][xpos] = colour & 15;
+	//}
 }
 
 void SetBGColour(unsigned char xpos, unsigned char ypos, unsigned char colour) {

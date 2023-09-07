@@ -45,10 +45,10 @@ Sprite downey = { cat, 8, 6 };
 
 unsigned char plr_x = 0;
 unsigned char plr_y = 0;
-unsigned char dir = 0b001000;
+unsigned char dir = 0b0001000;
 
 void loopdiloop() {
-	SetSprite(Stefan, plr_x, plr_y, 0);
+	RemoveSprite(Stefan, plr_x, plr_y);
 	if (GetKey(Right)) {
 		plr_x +=2;
 		dir = 0b00001000;
@@ -63,14 +63,8 @@ void loopdiloop() {
 	 if (GetKey(Down)) {
 		plr_y += 2;
 	}
+	SetSprite(downey, 100, 100, 3);
 	SetSprite(Stefan, plr_x, plr_y, dir);
-
-	SetSprite(Stefan, 32, 0, dir);
-	SetSprite(Stefan, 40, 0, 0b00011000);
-	SetSprite(Stefan, 48, 0, 0b00101000);
-	SetSprite(Stefan, 56, 0, 56);
-	SetSprite(Stefan, 64, 0, 0b00010111);
-	SetSprite(Stefan, 72, 0, 0b00110111);
 }
 void constring() {
 	printf("constructing\n");
@@ -93,7 +87,6 @@ void constring() {
 		SetSprite(Wall, 248, i, 1);
 		SetBGColour(31, i / 8, 2);
 	}
-	SetSprite(downey, 100, 100, 3);
 	SetPixel(101, 105, 2);
 }
 
