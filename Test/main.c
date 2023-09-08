@@ -92,7 +92,8 @@ unsigned char timer = 0;
 
 void constring() {
 	plr_x = 0;
-	plr_y = 0;
+	plr_y = 168;
+	frame = 1;
 	stef_walk[0] = Stefan;
 	stef_walk[1] = Stefan1;
 	stef_walk[2] = Stefan2;
@@ -145,7 +146,6 @@ void loopdiloop() {
 	}
 	SetSprite(stef_walk[frame], plr_x, plr_y, dir);
 	SetSprite(downey, 128, 100, 7);
-
 	if (timer / 8) {
 		frame++;
 		if (frame >= 3) {
