@@ -60,6 +60,12 @@ void RunGame(Game* game) {
            // glClearColor(113 / 255.0f, 62 / 255.0f, 255.0f / 255.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            //for (int y = 0; y < WIN_HEIGHT; y++) {
+            //    for (int x = 0; x < WIN_WIDTH; x++) {
+            //        pixelbuffer[y][x] = 0;
+            //    }
+            //}
+
             game->loop();
 
             DrawGameScreen();

@@ -63,8 +63,8 @@ void loopdiloop() {
 	 if (GetKey(Down)) {
 		plr_y += 2;
 	}
+	SetSprite(Stefan, plr_x, plr_y, 8);
 	SetSprite(downey, 100, 100, 3);
-	SetSprite(Stefan, plr_x, plr_y, dir);
 }
 void constring() {
 	printf("constructing\n");
@@ -86,6 +86,11 @@ void constring() {
 	for (int i = 8; i < 192; i += 8) {
 		SetSprite(Wall, 248, i, 1);
 		SetBGColour(31, i / 8, 2);
+	}
+	for (int i = 0; i < 24; i++) {
+		for (int j = 0; j < 32; j++) {
+			SetBGColour(j, i, 2);
+		}
 	}
 	SetPixel(101, 105, 2);
 }
