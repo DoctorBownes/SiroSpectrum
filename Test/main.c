@@ -2,15 +2,10 @@
 #include <SiroSpectrum/game.h>
 #include <stdio.h>
 
-typedef struct Tile {
-	unsigned char canvas[8 * 8];
-	unsigned char colour;
-}Tile;
-
-void SetTile(Tile tile, unsigned char x, unsigned char y) {
-	SetSprite((Sprite){ tile.canvas, 8,8 }, x * 8 + 4, y * 8, tile.colour & 15);
-	SetBGColour(x, y, tile.colour >> 4);
-}
+//typedef struct Tile {
+//	unsigned char canvas[8 * 8];
+//	unsigned char colour;
+//}Tile;
 
 unsigned char stefanvas[8 * 16] = {
 	0,0,0,1,1,1,0,0,
@@ -124,6 +119,7 @@ Tile Air = { {
 	0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,}, 0b00000000 };
+
 Tile Wall = { {
 	0,1,0,0,0,0,0,0,
 	0,1,0,0,0,0,0,0,
@@ -133,6 +129,7 @@ Tile Wall = { {
 	0,0,0,0,0,1,0,0,
 	1,1,1,1,1,1,1,1,
 	0,1,0,0,0,0,0,0,}, 0b00100001 };
+
 Sprite Stefan = {stefanvas, 8, 16};
 Sprite Stefan1 = {stefanvas1, 8, 16};
 Sprite Stefan2 = {stefanvas2, 8, 16};
@@ -146,7 +143,7 @@ unsigned char dir = 0b0001000;
 unsigned char frame = 0;
 unsigned char timer = 0;
 
-void constring() {
+void setup() {
 	plr_x = 100;
 	plr_y = 100;
 	frame = 0;
@@ -164,7 +161,7 @@ void constring() {
 	}
 }
 
-void loopdiloop() {
+void loop() {
 	RemoveSprite(Stefan, plr_x, plr_y);
 	if (GetKey(Right)) {
 		//if (plr_x < 240) {
@@ -201,7 +198,7 @@ void loopdiloop() {
 }
 
 int main(void) {
-	Game* fungame = newGame(constring, loopdiloop);
+	Game* fungame = newGame(setup, loop);
 
 	RunGame(fungame);
 

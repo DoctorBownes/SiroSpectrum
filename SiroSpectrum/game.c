@@ -75,3 +75,8 @@ void SetPixel(unsigned char xpos, unsigned char ypos, unsigned char colour) {
 void SetBGColour(unsigned char xpos, unsigned char ypos, unsigned char colour) {
 	backgroundcolors[ypos][xpos] = colour & 15;
 }
+
+void SetTile(Tile tile, unsigned char x, unsigned char y) {
+	SetSprite((Sprite) { tile.canvas, 8, 8 }, x * 8 + 4, y * 8, tile.colour & 15);
+	SetBGColour(x, y, tile.colour >> 4);
+}
