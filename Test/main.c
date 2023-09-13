@@ -163,38 +163,35 @@ void setup() {
 
 void loop() {
 	RemoveSprite(Stefan, plr_x, plr_y);
+	if (GetKey(Right) || GetKey(Left) || GetKey(Up) || GetKey(Down)) {
+		if (timer / 8) {
+			frame++;
+			if (frame >= 3) {
+				frame = 0;
+			}
+			timer = 0;
+		}
+		timer++;
+	}
+	else {
+		frame = 1;
+	}
 	if (GetKey(Right)) {
-		//if (plr_x < 240) {
-			plr_x += 2;
-			dir = 0b00001000;
-		//}
+		plr_x += 2;
+		dir = 0b00001000;
 	}
 	 if (GetKey(Left)) {
-		// if (plr_x > 8) {
 			 plr_x -= 2;
 			 dir = 0b00011000;
-		// }
 	}
 	 if (GetKey(Up)) {
-		// if (plr_y > 8) {
 			 plr_y -= 2;
-		// }
 	}
 	 if (GetKey(Down)) {
-		// if (plr_y < 168) {
 			 plr_y += 2;
-		// }
 	}
 	 SetSprite(downey, 128, 100, 7);
 	SetSprite(stef_walk[frame], plr_x, plr_y, dir);
-	if (timer / 8) {
-		frame++;
-		if (frame >= 3) {
-			frame = 0;
-		}
-		timer = 0;
-	}
-	timer++;
 }
 
 int main(void) {
