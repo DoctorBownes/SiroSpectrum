@@ -26,7 +26,26 @@ unsigned char stefanvas[8 * 16] = {
 	0,0,1,1,0,1,1,0,
 };
 
-unsigned char stefanvas1[8 * 16] = { 
+unsigned char stefanvas1[8 * 16] = {
+0,0,0,1,1,1,0,0,
+0,0,1,1,1,1,1,0,
+0,1,1,1,1,1,1,0,
+0,1,1,1,0,1,0,0,
+0,1,1,1,1,1,1,0,
+0,0,1,1,1,1,0,0,
+0,0,0,1,1,0,0,0,
+0,0,1,0,0,1,0,0,
+0,1,1,1,1,1,0,0,
+0,1,0,1,1,1,0,0,
+0,1,0,1,1,1,0,0,
+0,0,1,0,0,0,0,0,
+0,0,0,1,1,1,0,0,
+0,0,1,1,0,1,0,0,
+0,0,1,0,1,0,0,0,
+0,0,0,1,0,1,0,0,
+};
+
+unsigned char stefanvas2[8 * 16] = {
 0,0,0,1,1,1,0,0,
 0,0,1,1,1,1,1,0,
 0,1,1,1,1,1,1,0,
@@ -43,25 +62,6 @@ unsigned char stefanvas1[8 * 16] = {
 0,1,1,1,0,1,1,0,
 1,1,0,0,0,1,1,1,
 0,1,1,0,0,0,1,0,
-};
-
-unsigned char stefanvas2[8 * 16] = {
-0,0,0,1,1,1,0,0,
-0,0,1,1,1,1,1,0,
-0,1,1,1,1,1,1,0,
-0,1,1,1,0,1,0,0,
-0,1,1,1,1,1,1,0,
-0,0,1,1,1,1,0,0,
-0,0,0,1,1,0,0,0,
-0,0,1,0,0,1,0,0,
-0,1,1,1,1,1,0,0,
-0,1,0,1,1,1,0,0,
-0,1,0,1,1,1,0,0,
-0,0,1,0,0,0,0,0,
-0,0,0,1,1,1,0,0,
-0,0,1,1,0,1,0,0,
-0,0,1,0,1,0,0,0,
-0,0,0,1,0,1,0,0, 
 };
 
 unsigned char wall[8 * 8] = {
@@ -100,9 +100,9 @@ unsigned char map[32 * 24] = {
 	1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
 	1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
 	1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,
 };
-unsigned char cat[] ={
+unsigned char cat[] = {
 	1,0,0,0,1,0,0,1,
 	1,0,0,0,1,1,1,1,
 	1,1,0,0,1,0,1,0,
@@ -135,7 +135,7 @@ Sprite Stefan1 = {stefanvas1, 8, 16};
 Sprite Stefan2 = {stefanvas2, 8, 16};
 Sprite downey = { cat, 8, 6 };
 Tile tiles[2];
-Sprite stef_walk[3];
+Sprite stef_walk[4];
 
 unsigned char plr_x = 0;
 unsigned char plr_y = 0;
@@ -149,9 +149,10 @@ void setup() {
 	frame = 0;
 	tiles[0] = Air;
 	tiles[1] = Wall;
-	stef_walk[1] = Stefan;
-	stef_walk[0] = Stefan1;
+	stef_walk[0] = Stefan;
+	stef_walk[1] = Stefan1;
 	stef_walk[2] = Stefan2;
+	stef_walk[3] = Stefan1;
 	unsigned short sum = 0;
 	for (int y = 0; y < 24; y++) {
 		for (int x = 0; x < 32; x++) {
@@ -161,37 +162,33 @@ void setup() {
 	}
 }
 
-void loop() {
+void UpdatePlayer() {
 	RemoveSprite(Stefan, plr_x, plr_y);
+
+	plr_x += 2 * GetKey(Right);
+	plr_x -= 2 * GetKey(Left);
+	plr_y += 2 * GetKey(Down);
+	plr_y -= 2 * GetKey(Up);
+
+
+
 	if (GetKey(Right) || GetKey(Left) || GetKey(Up) || GetKey(Down)) {
 		if (timer / 8) {
-			frame++;
-			if (frame >= 3) {
-				frame = 0;
-			}
+			frame = frame + 1 & 3;
 			timer = 0;
 		}
 		timer++;
+
+		dir |= GetKey(Left) * 16;
+		dir &= ~(16) * ~GetKey(Right);
 	}
-	else {
-		frame = 1;
-	}
-	if (GetKey(Right)) {
-		plr_x += 2;
-		dir = 0b00001000;
-	}
-	 if (GetKey(Left)) {
-			 plr_x -= 2;
-			 dir = 0b00011000;
-	}
-	 if (GetKey(Up)) {
-			 plr_y -= 2;
-	}
-	 if (GetKey(Down)) {
-			 plr_y += 2;
-	}
-	 SetSprite(downey, 128, 100, 7);
-	SetSprite(stef_walk[frame], plr_x, plr_y, dir);
+	SetSprite(stef_walk[frame], plr_x, plr_y, dir | 8);
+}
+
+void loop() {
+	UpdatePlayer();
+
+	SetSprite(downey, 128, 100, 7);
 }
 
 int main(void) {

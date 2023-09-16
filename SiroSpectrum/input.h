@@ -122,6 +122,14 @@ enum KeyCode {
 	Menu = 348
 };
 
+unsigned char keypress[316];
+unsigned char keyreles[316];
+
 unsigned char GetKey(enum KeyCode key);
+
+unsigned char GetKeyPressed(enum KeyCode key);
+
+unsigned char GetKeyReleased(enum KeyCode key);
+
 
 #endif
