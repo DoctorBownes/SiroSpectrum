@@ -7,23 +7,23 @@
 //	unsigned char colour;
 //}Tile;
 
-unsigned char stefanvas[8 * 16] = {
-	0,0,0,1,1,1,0,0,
-	0,0,1,1,1,1,1,0,
-	0,1,1,1,1,1,0,0,
-	0,1,1,1,0,1,0,0,
-	0,1,1,1,1,1,1,0,
-	0,0,1,1,1,1,0,0,
-	0,0,0,1,1,0,0,0,
-	0,0,1,0,0,1,0,0,
-	0,1,1,1,1,1,0,0,
-	0,1,0,1,1,1,0,0,
-	0,0,0,1,1,1,0,0,
-	0,1,0,0,0,0,1,0,
-	0,0,1,1,1,1,0,0,
-	0,0,1,1,0,1,0,0,
-	0,0,1,0,1,1,0,0,
-	0,0,1,1,0,1,1,0,
+unsigned char stefanvas[8 * 16] = { 
+0,0,0,1,1,1,0,0,
+0,0,1,1,1,1,1,0,
+0,1,1,1,1,1,1,0,
+0,1,1,1,0,1,0,0,
+0,1,1,1,1,1,1,0,
+0,0,1,1,1,1,0,0,
+0,0,0,1,1,0,0,0,
+0,0,1,0,0,1,0,0,
+0,1,1,1,1,1,0,0,
+0,1,0,1,1,1,0,0,
+0,0,0,1,1,1,0,0,
+0,1,0,0,0,0,1,0,
+0,0,1,1,1,1,0,0,
+0,0,0,1,1,0,0,0,
+0,0,0,1,1,0,0,0,
+0,0,0,1,1,1,0,0,
 };
 
 unsigned char stefanvas1[8 * 16] = {
@@ -102,13 +102,23 @@ unsigned char map[32 * 24] = {
 	1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
 	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,
 };
-unsigned char cat[] = {
-	1,0,0,0,1,0,0,1,
-	1,0,0,0,1,1,1,1,
-	1,1,0,0,1,0,1,0,
-	0,1,1,1,1,1,1,1,
-	0,0,1,1,1,1,1,0,
-	0,0,1,0,1,0,1,0,
+unsigned char father[] = { 
+	0,0,0,0,0,0,0,0,
+	0,0,1,1,1,0,0,0,
+	0,1,1,1,1,1,0,0,
+	0,1,1,1,0,1,0,0,
+	0,1,1,1,1,1,1,0,
+	0,0,1,1,1,1,0,0,
+	0,0,0,1,1,0,0,0,
+	0,1,1,1,1,1,1,0,
+	0,0,1,1,0,1,0,0,
+	1,0,1,0,0,0,0,1,
+	1,0,1,1,0,1,0,1,
+	1,0,1,1,0,1,0,1,
+	1,0,1,1,1,1,0,1,
+	1,1,1,1,1,1,1,1,
+	1,0,0,1,1,0,0,1,
+	0,1,1,0,0,1,1,0,
 };
 Tile Air = { {
 	0,0,0,0,0,0,0,0,
@@ -133,7 +143,7 @@ Tile Wall = { {
 Sprite Stefan = {stefanvas, 8, 16};
 Sprite Stefan1 = {stefanvas1, 8, 16};
 Sprite Stefan2 = {stefanvas2, 8, 16};
-Sprite downey = { cat, 8, 6 };
+Sprite FatherSam = { father, 8, 16 };
 Tile tiles[2];
 Sprite stef_walk[4];
 Game* scenes[2];
@@ -148,7 +158,7 @@ void UpdateFrame(void) {
 	frame = frame + 1 & 3;
 }
 
-TimeEvent frameupdate = { 8, UpdateFrame};
+TimeEvent frameupdate = { 7, UpdateFrame};
 
 void setup() {
 	plr_x = 100;
@@ -172,10 +182,10 @@ void setup() {
 void UpdatePlayer() {
 	RemoveSprite(Stefan, plr_x, plr_y);
 
-	plr_x += 2 * GetKey(Right);
-	plr_x -= 2 * GetKey(Left);
-	plr_y += 2 * GetKey(Down);
-	plr_y -= 2 * GetKey(Up);
+	plr_x += 1 * GetKey(Right);
+	plr_x -= 1 * GetKey(Left);
+	plr_y += 1 * GetKey(Down);
+	plr_y -= 1 * GetKey(Up);
 
 	if (GetKey(Right) || GetKey(Left) || GetKey(Up) || GetKey(Down)) {
 		RunTimeEvent(&frameupdate);
@@ -193,19 +203,20 @@ void loop() {
 		gamenum &= 1;
 		ResetWindow();
 	}
-	SetSprite(downey, 128, 100, 7);
 }
 
 void setuptoo() {
-	SetPixel(4, 4, 5);
+	SetPixel(4, 4, 4);
 }
 
 void looptoo() {
+	UpdatePlayer();
 	if (GetKeyPressed(Escape)) {
 		gamenum++;
 		gamenum &= 1;
 		ResetWindow();
 	}
+	SetSprite(FatherSam, 128, 100, 8);
 }
 
 int main(void) {
