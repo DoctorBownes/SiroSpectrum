@@ -136,11 +136,13 @@ Sprite Stefan2 = {stefanvas2, 8, 16};
 Sprite downey = { cat, 8, 6 };
 Tile tiles[2];
 Sprite stef_walk[4];
+Game* scenes[2];
 
 unsigned char plr_x = 0;
 unsigned char plr_y = 0;
 unsigned char dir = 0b0001000;
 unsigned char frame = 0;
+unsigned char gamenum = 0;
 
 void UpdateFrame(void) {
 	frame = frame + 1 & 3;
@@ -186,14 +188,39 @@ void UpdatePlayer() {
 
 void loop() {
 	UpdatePlayer();
-
+	if (GetKeyPressed(Escape)) {
+		gamenum++;
+		gamenum &= 1;
+		ResetWindow();
+	}
 	SetSprite(downey, 128, 100, 7);
+}
+
+void setuptoo() {
+	SetPixel(4, 4, 5);
+}
+
+void looptoo() {
+	if (GetKeyPressed(Escape)) {
+		gamenum++;
+		gamenum &= 1;
+		ResetWindow();
+	}
 }
 
 int main(void) {
 	Game* fungame = newGame(setup, loop);
+	Game* stupidgame = newGame(setuptoo, looptoo);
 
-	RunGame(fungame);
+	scenes[0] = fungame;
+	scenes[1] = stupidgame;
+
+	CreateWindow();
+
+	while (!CloseWindow()) {
+		RunGame(scenes[gamenum]);
+	}
+
 
 	return 0;
 }

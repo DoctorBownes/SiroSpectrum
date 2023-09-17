@@ -1,9 +1,11 @@
 #ifndef CORE_H_
 #define CORE_H_
 
-struct GLFWwindow* _window;
+void CreateWindow();
 
-void SetupWindow();
+void ResetWindow();
+
+int  CloseWindow();
 
 void RunGame(struct Game* game);
 

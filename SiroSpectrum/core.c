@@ -13,8 +13,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 };
 
 
-void SetupWindow() {
+void CreateWindow() {
     _window = NULL;
+    _starttime = 0.0;
+    _reset = 1;
     if (!glfwInit())
     {
         fprintf(stderr, "Failed to initialize GLFW\n");
@@ -38,44 +40,50 @@ void SetupWindow() {
         fprintf(stderr, "Failed to initialize GLAD.\n");
         glfwTerminate();
     }
+
+    SetupRenderer();
+};
+
+void ResetWindow(){
+    for (int y = 0; y < WIN_HEIGHT; y++) {
+        for (int x = 0; x < WIN_WIDTH; x++) {
+            pixelbuffer[y][x] = 0;
+        }
+    }
+    for (int y = 0; y < WIN_HEIGHT / TILESIZE; y++) {
+        for (int x = 0; x < WIN_WIDTH / TILESIZE; x++) {
+            backgroundcolors[y][x] = 0;
+        }
+    }
+    _reset = 1;
+};
+
+int CloseWindow(){
+    return (glfwWindowShouldClose(_window));
 };
 
 void RunGame(Game* game) {
-
-    SetupWindow();
-
-    SetupRenderer();
-
-    double starttime = 0.0;
-
-    if (!game->loop || !game->construct) {
-        printf("Error: No loop or contruct function found!\nMake sure you assign .loop and .construct to a function.\n");
-        return;
-    }
-
-    game->construct();
-
-    do {
-        if (glfwGetTime() - starttime > 0.0162f) {//60 FPS CAP
-           // glClearColor(113 / 255.0f, 62 / 255.0f, 255.0f / 255.0f, 0.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            //for (int y = 0; y < WIN_HEIGHT; y++) {
-            //    for (int x = 0; x < WIN_WIDTH; x++) {
-            //        pixelbuffer[y][x] = 0;
-            //    }
-            //}
-
-            game->loop();
-
-            DrawGameScreen();
-            
-            RenderGameScreen();
-
-            glfwSwapBuffers(_window);
-            glfwPollEvents();
-
-            starttime = glfwGetTime();
+    if (glfwGetTime() - _starttime > 0.0162f) {//60 FPS CAP
+        glClear(GL_COLOR_BUFFER_BIT);
+    
+        if (_reset) {
+    
+            ResetWindow();
+    
+            game->construct();
+    
+            _reset = 0;
         }
-    } while (!glfwWindowShouldClose(_window));
+    
+        game->loop();
+    
+        DrawGameScreen();
+        
+        RenderGameScreen();
+    
+        glfwSwapBuffers(_window);
+        glfwPollEvents();
+    
+        _starttime = glfwGetTime();
+    }
 };
