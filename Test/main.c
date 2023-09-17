@@ -141,7 +141,12 @@ unsigned char plr_x = 0;
 unsigned char plr_y = 0;
 unsigned char dir = 0b0001000;
 unsigned char frame = 0;
-unsigned char timer = 0;
+
+void UpdateFrame(void) {
+	frame = frame + 1 & 3;
+}
+
+TimeEvent frameupdate = { 8, UpdateFrame};
 
 void setup() {
 	plr_x = 100;
@@ -170,14 +175,8 @@ void UpdatePlayer() {
 	plr_y += 2 * GetKey(Down);
 	plr_y -= 2 * GetKey(Up);
 
-
-
 	if (GetKey(Right) || GetKey(Left) || GetKey(Up) || GetKey(Down)) {
-		if (timer / 8) {
-			frame = frame + 1 & 3;
-			timer = 0;
-		}
-		timer++;
+		RunTimeEvent(&frameupdate);
 
 		dir |= GetKey(Left) * 16;
 		dir &= ~(16) * ~GetKey(Right);

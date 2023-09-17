@@ -72,6 +72,14 @@ void SetPixel(unsigned char xpos, unsigned char ypos, unsigned char colour) {
 	}
 }
 
+void RunTimeEvent(TimeEvent* time_event) {
+	if (time_event->counter / time_event->restart_at) {
+		time_event->function();
+		time_event->counter = 0;
+	}
+	time_event->counter++;
+}
+
 void SetBGColour(unsigned char xpos, unsigned char ypos, unsigned char colour) {
 	backgroundcolors[ypos][xpos] = colour & 15;
 }
