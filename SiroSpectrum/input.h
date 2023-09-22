@@ -124,6 +124,8 @@ enum KeyCode {
 
 unsigned char _keypress[316];
 unsigned char _keyreles[316];
+unsigned char _presscalled;
+unsigned char _relescalled;
 
 unsigned char GetKey(enum KeyCode key);
 

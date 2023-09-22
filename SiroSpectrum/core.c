@@ -65,6 +65,9 @@ int CloseWindow(){
 void RunGame(Game* game) {
     if (glfwGetTime() - _starttime > 0.0162f) {//60 FPS CAP
         glClear(GL_COLOR_BUFFER_BIT);
+
+        _presscalled = 0;
+        _relescalled = 0;
     
         if (_reset) {
     

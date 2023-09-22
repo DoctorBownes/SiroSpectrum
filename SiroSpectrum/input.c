@@ -7,11 +7,16 @@ unsigned char GetKey(enum KeyCode key) {
 }
 
 unsigned char GetKeyReleased(enum KeyCode key) {
-	if (!glfwGetKey(_window, key) && _keyreles[key - 32]) {
-		_keyreles[key - 32] = 0;
+	unsigned char keystatus = glfwGetKey(_window, key);
+	if (!keystatus && _relescalled) {
 		return 1;
 	}
-	if (glfwGetKey(_window, key)) {
+	if (!keystatus && _keyreles[key - 32]) {
+		_keyreles[key - 32] = 0;
+		_relescalled = 1;
+		return 1;
+	}
+	if (keystatus) {
 		_keyreles[key - 32] = 1;
 	}
 	return 0;
@@ -20,11 +25,16 @@ unsigned char GetKeyReleased(enum KeyCode key) {
 
 
 unsigned char GetKeyPressed(enum KeyCode key) {
-	if (glfwGetKey(_window, key) && !_keypress[key - 32]) {
-		_keypress[key - 32] = 1;
+	unsigned char keystatus = glfwGetKey(_window, key);
+	if (keystatus && _presscalled) {
 		return 1;
 	}
-	if (!glfwGetKey(_window, key)) {
+	if (keystatus && !_keypress[key - 32]) {
+		_keypress[key - 32] = 1;
+		_presscalled = 1;
+		return 1;
+	}
+	else if (!keystatus) {
 		_keypress[key - 32] = 0;
 	}
 	return 0;
