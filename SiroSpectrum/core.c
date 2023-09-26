@@ -42,7 +42,7 @@ void CreateWindow() {
     }
 
     SetupRenderer();
-};
+}
 
 void ResetWindow(){
     for (int y = 0; y < WIN_HEIGHT; y++) {

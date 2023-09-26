@@ -4,12 +4,19 @@
 
 #define OFF 0,0,0,0
 #define BLK 0,0,0,255
+#define DBLU 0,0,205,255
 #define BLU 0,0,255,255
+#define DRED 205,0,0,255
 #define RED 255,0,0,255
+#define DMGT 205,0,205,255
 #define MGT 255,0,255,255
+#define DGRN 0,205,0,255
 #define GRN 0,255,0,255
+#define DCYN 0,205,205,255
 #define CYN 0,255,255,255
+#define DYLW 205,205,0,255
 #define YLW 255,255,0,255
+#define GRY 205,205,205,255
 #define WHT 255,255,255,255
 
 const char* vertex_shader =
@@ -142,7 +149,7 @@ void SetupRenderer(void) {
     glUniform1i(glGetUniformLocation(renderer.shaderProgram, "FGTextureSampler"), 1);
 
     unsigned char palette[] = {
-        OFF,BLK,BLU,RED,MGT,GRN,CYN,YLW,WHT
+        OFF,BLK,DBLU,BLU,DRED,RED,DMGT,MGT,DGRN,GRN,DCYN,CYN,DYLW,YLW,GRY,WHT
     };
 
     glActiveTexture(GL_TEXTURE2);
@@ -152,7 +159,7 @@ void SetupRenderer(void) {
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 9, 0, GL_RGBA, GL_UNSIGNED_BYTE, palette);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, palette);
     glUniform1i(glGetUniformLocation(renderer.shaderProgram, "PaletteSampler"), 2);
 
     glActiveTexture(GL_TEXTURE0);

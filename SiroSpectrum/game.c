@@ -17,7 +17,7 @@ void SetSprite(Sprite sprite, unsigned char xpos, unsigned char ypos, unsigned c
 	case 1:
 		for (unsigned char y = 0; y < sprite.height; y++) {
 			for (unsigned char x = sprite.width; x > 0; x--) {
-				SetPixel(x - (sprite.width / 2) + xpos - 1, y + ypos, sprite.canvas[row] * colour);
+				SetPixel(x + xpos - 1, y + ypos, sprite.canvas[row] * colour);
 				row++;
 			}
 		}
@@ -25,7 +25,7 @@ void SetSprite(Sprite sprite, unsigned char xpos, unsigned char ypos, unsigned c
 	case 2:
 		for (unsigned char y = sprite.height; y > 0; y--) {
 			for (unsigned char x = 0; x < sprite.width; x++) {
-				SetPixel(x - (sprite.width / 2) + xpos, y + ypos - 1, sprite.canvas[row] * colour);
+				SetPixel(x + xpos, y + ypos - 1, sprite.canvas[row] * colour);
 				row++;
 			}
 		}
@@ -33,7 +33,7 @@ void SetSprite(Sprite sprite, unsigned char xpos, unsigned char ypos, unsigned c
 	case 3:
 		for (unsigned char y = sprite.height; y > 0; y--) {
 			for (unsigned char x = sprite.width; x > 0; x--) {
-				SetPixel(x - (sprite.width / 2) + xpos - 1, y + ypos - 1, sprite.canvas[row] * colour);
+				SetPixel(x + xpos - 1, y + ypos - 1, sprite.canvas[row] * colour);
 				row++;
 			}
 		}
@@ -41,7 +41,7 @@ void SetSprite(Sprite sprite, unsigned char xpos, unsigned char ypos, unsigned c
 	default:
 		for (unsigned char y = 0; y < sprite.height; y++) {
 			for (unsigned char x = 0; x < sprite.width; x++) {
-				SetPixel(x - (sprite.width / 2) + xpos, y + ypos, sprite.canvas[row] * colour);
+				SetPixel(x + xpos, y + ypos, sprite.canvas[row] * colour);
 				row++;
 			}
 		}
@@ -61,7 +61,7 @@ void SetSprite(Sprite sprite, unsigned char xpos, unsigned char ypos, unsigned c
 void RemoveSprite(Sprite sprite, unsigned char xpos, unsigned char ypos) {
 	for (unsigned char y = 0; y < sprite.height; y++) {
 		for (unsigned char x = 0; x < sprite.width; x++) {
-			pixelbuffer[y + ypos][x - (sprite.width / 2) + xpos & 255] = 0;
+			pixelbuffer[y + ypos][x + xpos & 255] = 0;
 		}
 	}
 }
@@ -85,6 +85,6 @@ void SetBGColour(unsigned char xpos, unsigned char ypos, unsigned char colour) {
 }
 
 void SetTile(Tile tile, unsigned char x, unsigned char y) {
-	SetSprite((Sprite) { tile.canvas, 8, 8 }, x * 8 + 4, y * 8, tile.colour & 15);
+	SetSprite((Sprite) { tile.canvas, 8, 8 }, x * 8, y * 8, tile.colour & 15);
 	SetBGColour(x, y, tile.colour >> 4);
 }

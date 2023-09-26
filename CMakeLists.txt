@@ -72,8 +72,8 @@ add_library(SiroSpectrum # ar rcs libSiroSpectrum.a
 # Test
 add_executable(Test # g++ Test/main.c -o Test
 	Test/main.c
-	Test/gamescene.c
-	Test/gamescene.h
+	Test/entity.c
+	Test/entity.h
 )
 target_link_libraries(Test # g++ -lSiroSpectrum
 	${ALL_GRAPHICS_LIBS}
