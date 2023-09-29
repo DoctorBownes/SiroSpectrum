@@ -74,6 +74,7 @@ add_executable(Test # g++ Test/main.c -o Test
 	Test/main.c
 	Test/entity.c
 	Test/entity.h
+	Test/checkpoint.h
 )
 target_link_libraries(Test # g++ -lSiroSpectrum
 	${ALL_GRAPHICS_LIBS}
