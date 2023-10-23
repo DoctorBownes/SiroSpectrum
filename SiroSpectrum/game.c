@@ -1,11 +1,11 @@
 #include "game.h"
 #include <SiroSpectrum/renderer.h>
 
-Game* newGame(void(*gamecontructor)(), void(*gameloop)()) {
+Game* newGame(void(*setup)(), void(*loop)()) {
 	Game* game = (Game*)malloc(sizeof(Game));
 
-	game->construct = gamecontructor;
-	game->loop = gameloop;
+	game->constructor = setup;
+	game->tick = loop;
 
 	return game;
 }

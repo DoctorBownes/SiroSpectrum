@@ -69,17 +69,17 @@ add_library(SiroSpectrum # ar rcs libSiroSpectrum.a
 	SiroSpectrum/input.h
 )
 
-# Test
-add_executable(Test # g++ Test/main.c -o Test
-	Test/main.c
-	Test/entity.c
-	Test/entity.h
-	Test/checkpoint.h
+# TEMPTARE
+add_executable(TEMPTARE # g++ TEMPTARE/main.c -o TEMPTARE
+	TEMPTARE/main.c
+	TEMPTARE/entity.c
+	TEMPTARE/entity.h
+	TEMPTARE/checkpoint.h
 )
-target_link_libraries(Test # g++ -lSiroSpectrum
+target_link_libraries(TEMPTARE # g++ -lSiroSpectrum
 	${ALL_GRAPHICS_LIBS}
 )
-	target_link_libraries(Test
+	target_link_libraries(TEMPTARE
 		${ALL_GRAPHICS_LIBS}
 	)
 

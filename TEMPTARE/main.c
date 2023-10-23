@@ -1,6 +1,6 @@
 #include <SiroSpectrum/core.h>
 #include <SiroSpectrum/game.h>
-#include <Test/entity.h>
+#include <TEMPTARE/entity.h>
 #include <stdio.h>
 
 //typedef struct Tile {
@@ -254,7 +254,7 @@ void looptoo() {
 int main(void) {
 	Game* fungame = newGame(setup, loop);
 	Game* stupidgame = newGame(setuptoo, looptoo);
-
+	
 	scenes[0] = fungame;
 	scenes[1] = stupidgame;
 

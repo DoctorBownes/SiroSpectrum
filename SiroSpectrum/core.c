@@ -8,7 +8,6 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    //glViewport(0,0,width, height);
     glViewport((width - 1024) / 2, (height - 768) / 2, 1024, 768);
 };
 
@@ -45,16 +44,6 @@ void CreateWindow() {
 }
 
 void ResetWindow(){
-    for (int y = 0; y < WIN_HEIGHT; y++) {
-        for (int x = 0; x < WIN_WIDTH; x++) {
-            pixelbuffer[y][x] = 0;
-        }
-    }
-    for (int y = 0; y < WIN_HEIGHT / TILESIZE; y++) {
-        for (int x = 0; x < WIN_WIDTH / TILESIZE; x++) {
-            backgroundcolors[y][x] = 0;
-        }
-    }
     _reset = 1;
 };
 
@@ -70,15 +59,24 @@ void RunGame(Game* game) {
         _relescalled = 0;
     
         if (_reset) {
+
+            for (int y = 0; y < WIN_HEIGHT; y++) {
+                for (int x = 0; x < WIN_WIDTH; x++) {
+                    pixelbuffer[y][x] = 0;
+                }
+            }
+            for (int y = 0; y < WIN_HEIGHT / TILESIZE; y++) {
+                for (int x = 0; x < WIN_WIDTH / TILESIZE; x++) {
+                    backgroundcolors[y][x] = 0;
+                }
+            }
     
-            ResetWindow();
-    
-            game->construct();
+            game->constructor();
     
             _reset = 0;
         }
     
-        game->loop();
+        game->tick();
     
         DrawGameScreen();
         

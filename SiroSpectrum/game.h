@@ -5,8 +5,8 @@
 #include <SiroSpectrum/input.h>
 
 typedef struct Game {
-	void (*loop)();
-	void (*construct)();
+	void (*constructor)();
+	void (*tick)();
 } Game;
 
 typedef struct TimeEvent {
